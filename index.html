@@ -18,7 +18,7 @@
 <body>
     <div class="info-box">
         <h2>Your Phone Details:</h2>
-        <p><strong>IMEI Number:</strong> <span id="imei"></span></p>
+        <p><strong>IMEI Number:</strong> <input type="text" id="imei" placeholder="Enter your IMEI" /></p>
         <p><strong>Device Type:</strong> <span id="deviceType"></span></p>
         <p><strong>Operating System:</strong> <span id="os"></span></p>
         <p><strong>OS Version:</strong> <span id="osVersion"></span></p>
@@ -85,7 +85,6 @@
         }
 
         // Set device info in HTML
-        document.getElementById('imei').textContent = 'Enter your IMEI manually'; // Placeholder for IMEI input
         document.getElementById('deviceType').textContent = getDeviceType();
         document.getElementById('os').textContent = getOS();
         document.getElementById('osVersion').textContent = getOSVersion();
@@ -94,10 +93,11 @@
         document.getElementById('resolution').textContent = `${screen.width}x${screen.height}`;
         document.getElementById('language').textContent = navigator.language;
 
-        // Network Type (if supported)
+        // Network Type and Carrier
         if (navigator.connection) {
             document.getElementById('network').textContent = navigator.connection.effectiveType;
-            document.getElementById('carrier').textContent = navigator.connection.type || 'Carrier info not available';
+            const carrier = navigator.connection.type || 'Carrier info not available';
+            document.getElementById('carrier').textContent = carrier;
         } else {
             document.getElementById('network').textContent = 'Network info not available';
             document.getElementById('carrier').textContent = 'Carrier info not available';
