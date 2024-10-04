@@ -42,10 +42,10 @@
 
         // Operating System and Version
         function getOS() {
-            const userAgent = navigator.userAgent;
-            if (/android/.test(userAgent)) return 'Android';
-            if (/iphone|ipad|ipod/.test(userAgent)) return 'iOS';
-            if (userAgent.includes('win')) return 'Windows';
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.includes('android')) return 'Android';
+            if (userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ipod')) return 'iOS';
+            if (userAgent.includes('windows')) return 'Windows';
             if (userAgent.includes('mac')) return 'MacOS';
             if (userAgent.includes('linux')) return 'Linux';
             return 'Unknown';
@@ -53,12 +53,17 @@
 
         function getOSVersion() {
             const userAgent = navigator.userAgent;
-            // Basic OS version detection (may not cover all cases)
-            if (/android/.test(userAgent)) {
+            if (/android\s([\d.]+)/.test(userAgent)) {
                 return userAgent.match(/android\s([\d.]+)/i)[1];
             }
             if (/iphone|ipad|ipod/.test(userAgent)) {
                 return userAgent.match(/os\s([\d_]+)/i)[1].replace(/_/g, '.');
+            }
+            if (/windows nt\s([\d.]+)/i.test(userAgent)) {
+                return userAgent.match(/windows nt\s([\d.]+)/i)[1];
+            }
+            if (/mac os x\s([\d_]+)/.test(userAgent)) {
+                return userAgent.match(/mac os x\s([\d_]+)/i)[1].replace(/_/g, '.');
             }
             return 'Unknown';
         }
