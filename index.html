@@ -18,6 +18,7 @@
 <body>
     <div class="info-box">
         <h2>Your Phone Details:</h2>
+        <p><strong>Device Name:</strong> <span id="deviceName"></span></p>
         <p><strong>Device Type:</strong> <span id="deviceType"></span></p>
         <p><strong>Operating System:</strong> <span id="os"></span></p>
         <p><strong>OS Version:</strong> <span id="osVersion"></span></p>
@@ -31,6 +32,21 @@
     </div>
 
     <script>
+        // Get Device Name
+        function getDeviceName() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (/iphone/i.test(userAgent)) return 'iPhone';
+            if (/ipad/i.test(userAgent)) return 'iPad';
+            if (/android/i.test(userAgent)) {
+                const match = userAgent.match(/android.+?;\s([^\s;]+)/);
+                return match ? match[1] : 'Android Device';
+            }
+            if (/windows phone/i.test(userAgent)) return 'Windows Phone';
+            if (/macintosh/i.test(userAgent)) return 'Mac';
+            if (/linux/i.test(userAgent)) return 'Linux Device';
+            return 'Unknown Device';
+        }
+
         // Device Type
         function getDeviceType() {
             const userAgent = navigator.userAgent.toLowerCase();
@@ -72,7 +88,7 @@
             const userAgent = navigator.userAgent;
             if (userAgent.includes('Firefox')) return 'Mozilla Firefox';
             if (userAgent.includes('Chrome')) return 'Google Chrome';
-            if (userAgent.includes('Safari')) return 'Safari';
+            if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
             if (userAgent.includes('MSIE') || userAgent.includes('Trident')) return 'Internet Explorer';
             return 'Unknown';
         }
@@ -80,10 +96,17 @@
         function getBrowserVersion() {
             const userAgent = navigator.userAgent;
             const match = userAgent.match(/(chrome|firefox|safari|msie|trident)[\/\s]?([\d.]+)/i);
-            return match ? match[2] : 'Unknown';
+            if (match) {
+                if (match[1].toLowerCase() === 'trident') {
+                    return userAgent.match(/rv:(\d+\.\d+)/)[1]; // For IE 11
+                }
+                return match[2];
+            }
+            return 'Unknown';
         }
 
         // Set device info in HTML
+        document.getElementById('deviceName').textContent = getDeviceName();
         document.getElementById('deviceType').textContent = getDeviceType();
         document.getElementById('os').textContent = getOS();
         document.getElementById('osVersion').textContent = getOSVersion();
