@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Information</title>
+    <style>
+        .info-box {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-box">
+        <h2>Your Phone Details:</h2>
+        <p><strong>IMEI Number:</strong> <span id="imei"></span></p>
+        <p><strong>Device Type:</strong> <span id="deviceType"></span></p>
+        <p><strong>Operating System:</strong> <span id="os"></span></p>
+        <p><strong>OS Version:</strong> <span id="osVersion"></span></p>
+        <p><strong>Browser:</strong> <span id="browser"></span></p>
+        <p><strong>Browser Version:</strong> <span id="browserVersion"></span></p>
+        <p><strong>Screen Resolution:</strong> <span id="resolution"></span></p>
+        <p><strong>Language:</strong> <span id="language"></span></p>
+        <p><strong>Network Type:</strong> <span id="network"></span></p>
+        <p><strong>Network Carrier:</strong> <span id="carrier"></span></p>
+        <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
+    </div>
+
+    <script>
+        // Device Type
+        function getDeviceType() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.includes('mobi')) return 'Mobile';
+            if (userAgent.includes('tablet')) return 'Tablet';
+            return 'Desktop';
+        }
+
+        // Operating System and Version
+        function getOS() {
+            const userAgent = navigator.userAgent;
+            if (/android/.test(userAgent)) return 'Android';
+            if (/iphone|ipad|ipod/.test(userAgent)) return 'iOS';
+            if (userAgent.includes('win')) return 'Windows';
+            if (userAgent.includes('mac')) return 'MacOS';
+            if (userAgent.includes('linux')) return 'Linux';
+            return 'Unknown';
+        }
+
+        function getOSVersion() {
+            const userAgent = navigator.userAgent;
+            // Basic OS version detection (may not cover all cases)
+            if (/android/.test(userAgent)) {
+                return userAgent.match(/android\s([\d.]+)/i)[1];
+            }
+            if (/iphone|ipad|ipod/.test(userAgent)) {
+                return userAgent.match(/os\s([\d_]+)/i)[1].replace(/_/g, '.');
+            }
+            return 'Unknown';
+        }
+
+        // Browser and Version
+        function getBrowser() {
+            const userAgent = navigator.userAgent;
+            if (userAgent.includes('Firefox')) return 'Mozilla Firefox';
+            if (userAgent.includes('Chrome')) return 'Google Chrome';
+            if (userAgent.includes('Safari')) return 'Safari';
+            if (userAgent.includes('MSIE') || userAgent.includes('Trident')) return 'Internet Explorer';
+            return 'Unknown';
+        }
+
+        function getBrowserVersion() {
+            const userAgent = navigator.userAgent;
+            const match = userAgent.match(/(chrome|firefox|safari|msie|trident)[\/\s]([\d.]+)/i);
+            return match ? match[2] : 'Unknown';
+        }
+
+        // Set device info in HTML
+        document.getElementById('imei').textContent = 'Enter your IMEI manually'; // Placeholder for IMEI input
+        document.getElementById('deviceType').textContent = getDeviceType();
+        document.getElementById('os').textContent = getOS();
+        document.getElementById('osVersion').textContent = getOSVersion();
+        document.getElementById('browser').textContent = getBrowser();
+        document.getElementById('browserVersion').textContent = getBrowserVersion();
+        document.getElementById('resolution').textContent = `${screen.width}x${screen.height}`;
+        document.getElementById('language').textContent = navigator.language;
+
+        // Network Type (if supported)
+        if (navigator.connection) {
+            document.getElementById('network').textContent = navigator.connection.effectiveType;
+            document.getElementById('carrier').textContent = navigator.connection.type || 'Carrier info not available';
+        } else {
+            document.getElementById('network').textContent = 'Network info not available';
+            document.getElementById('carrier').textContent = 'Carrier info not available';
+        }
+
+        // User Agent
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+    </script>
+</body>
+</html>
