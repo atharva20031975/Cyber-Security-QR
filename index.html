@@ -52,17 +52,17 @@
 
         function getOSVersion() {
             const userAgent = navigator.userAgent;
-            if (/android\s([\d.]+)/.test(userAgent)) {
-                return userAgent.match(/android\s([\d.]+)/i)[1];
+            if (/android (\d+(\.\d+)?)/i.test(userAgent)) {
+                return userAgent.match(/android (\d+(\.\d+)?)/i)[1];
             }
-            if (/iphone|ipad/.test(userAgent)) {
-                return userAgent.match(/os\s([\d_]+)/i)[1].replace(/_/g, '.');
+            if (/iphone os (\d+(_\d+)?)/i.test(userAgent)) {
+                return userAgent.match(/iphone os (\d+(_\d+)?)/i)[1].replace(/_/g, '.');
             }
-            if (/windows nt\s([\d.]+)/.test(userAgent)) {
-                return userAgent.match(/windows nt\s([\d.]+)/i)[1];
+            if (/windows nt (\d+(\.\d+)?)/i.test(userAgent)) {
+                return userAgent.match(/windows nt (\d+(\.\d+)?)/i)[1];
             }
-            if (/mac os x\s([\d_]+)/.test(userAgent)) {
-                return userAgent.match(/mac os x\s([\d_]+)/i)[1].replace(/_/g, '.');
+            if (/mac os x (\d+(_\d+)?)/i.test(userAgent)) {
+                return userAgent.match(/mac os x (\d+(_\d+)?)/i)[1].replace(/_/g, '.');
             }
             return 'Unknown';
         }
