@@ -18,7 +18,6 @@
 <body>
     <div class="info-box">
         <h2>Your Phone Details:</h2>
-        <p><strong>IMEI Number:</strong> <input type="text" id="imei" placeholder="Enter your IMEI" /></p>
         <p><strong>Device Type:</strong> <span id="deviceType"></span></p>
         <p><strong>Operating System:</strong> <span id="os"></span></p>
         <p><strong>OS Version:</strong> <span id="osVersion"></span></p>
@@ -40,71 +39,4 @@
             return 'Desktop';
         }
 
-        // Operating System and Version
-        function getOS() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            if (userAgent.includes('android')) return 'Android';
-            if (userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ipod')) return 'iOS';
-            if (userAgent.includes('windows')) return 'Windows';
-            if (userAgent.includes('mac')) return 'MacOS';
-            if (userAgent.includes('linux')) return 'Linux';
-            return 'Unknown';
-        }
-
-        function getOSVersion() {
-            const userAgent = navigator.userAgent;
-            if (/android\s([\d.]+)/.test(userAgent)) {
-                return userAgent.match(/android\s([\d.]+)/i)[1];
-            }
-            if (/iphone|ipad|ipod/.test(userAgent)) {
-                return userAgent.match(/os\s([\d_]+)/i)[1].replace(/_/g, '.');
-            }
-            if (/windows nt\s([\d.]+)/i.test(userAgent)) {
-                return userAgent.match(/windows nt\s([\d.]+)/i)[1];
-            }
-            if (/mac os x\s([\d_]+)/.test(userAgent)) {
-                return userAgent.match(/mac os x\s([\d_]+)/i)[1].replace(/_/g, '.');
-            }
-            return 'Unknown';
-        }
-
-        // Browser and Version
-        function getBrowser() {
-            const userAgent = navigator.userAgent;
-            if (userAgent.includes('Firefox')) return 'Mozilla Firefox';
-            if (userAgent.includes('Chrome')) return 'Google Chrome';
-            if (userAgent.includes('Safari')) return 'Safari';
-            if (userAgent.includes('MSIE') || userAgent.includes('Trident')) return 'Internet Explorer';
-            return 'Unknown';
-        }
-
-        function getBrowserVersion() {
-            const userAgent = navigator.userAgent;
-            const match = userAgent.match(/(chrome|firefox|safari|msie|trident)[\/\s]([\d.]+)/i);
-            return match ? match[2] : 'Unknown';
-        }
-
-        // Set device info in HTML
-        document.getElementById('deviceType').textContent = getDeviceType();
-        document.getElementById('os').textContent = getOS();
-        document.getElementById('osVersion').textContent = getOSVersion();
-        document.getElementById('browser').textContent = getBrowser();
-        document.getElementById('browserVersion').textContent = getBrowserVersion();
-        document.getElementById('resolution').textContent = `${screen.width}x${screen.height}`;
-        document.getElementById('language').textContent = navigator.language;
-
-        // Network Type and Carrier
-        if (navigator.connection) {
-            document.getElementById('network').textContent = navigator.connection.effectiveType;
-            const carrier = navigator.connection.type || 'Carrier info not available';
-            document.getElementById('carrier').textContent = carrier;
-        } else {
-            document.getElementById('network').textContent = 'Network info not available';
-            document.getElementById('carrier').textContent = 'Carrier info not available';
-        }
-
-        // User Agent
-        document.getElementById('userAgent').textContent = navigator.userAgent;
-    </script>
-</body>
-</html>
+        // Operating Sy
