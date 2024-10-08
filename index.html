@@ -48,11 +48,96 @@
             return 'Unknown Device';
         }
 
-        // Other functions remain the same ...
+        // Device Type
+        function getDeviceType() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.includes('mobi')) return 'Mobile';
+            if (userAgent.includes('tablet')) return 'Tablet';
+            return 'Desktop';
+        }
 
-        // Set device info in HTML
-        document.getElementById('deviceName').textContent = getDeviceName();
-        // Continue with the rest of the setup...
+        // Operating System and Version
+        function getOS() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.includes('android')) return 'Android';
+            if (userAgent.includes('iphone') || userAgent.includes('ipad')) return 'iOS';
+            if (userAgent.includes('windows')) return 'Windows';
+            if (userAgent.includes('mac')) return 'MacOS';
+            if (userAgent.includes('linux')) return 'Linux';
+            return 'Unknown';
+        }
+
+        function getOSVersion() {
+            const userAgent = navigator.userAgent;
+            if (/android (\d+(\.\d+)?)/i.test(userAgent)) {
+                return userAgent.match(/android (\d+(\.\d+)?)/i)[1];
+            }
+            if (/iphone os (\d+(_\d+)?)/i.test(userAgent)) {
+                return userAgent.match(/iphone os (\d+(_\d+)?)/i)[1].replace(/_/g, '.');
+            }
+            if (/windows nt (\d+(\.\d+)?)/i.test(userAgent)) {
+                return userAgent.match(/windows nt (\d+(\.\d+)?)/i)[1];
+            }
+            if (/mac os x (\d+(_\d+)?)/i.test(userAgent)) {
+                return userAgent.match(/mac os x (\d+(_\d+)?)/i)[1].replace(/_/g, '.');
+            }
+            return 'Unknown';
+        }
+
+        // Browser and Version
+        function getBrowser() {
+            const userAgent = navigator.userAgent;
+            if (userAgent.includes('Firefox')) return 'Mozilla Firefox';
+            if (userAgent.includes('Chrome')) return 'Google Chrome';
+            if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
+            if (userAgent.includes('MSIE') || userAgent.includes('Trident')) return 'Internet Explorer';
+            return 'Unknown';
+        }
+
+        function getBrowserVersion() {
+            const userAgent = navigator.userAgent;
+            const match = userAgent.match(/(chrome|firefox|safari|msie|trident)[\/\s]?([\d.]+)/i);
+            if (match) {
+                if (match[1].toLowerCase() === 'trident') {
+                    return userAgent.match(/rv:(\d+\.\d+)/)[1]; // For IE 11
+                }
+                return match[2];
+            }
+            return 'Unknown';
+        }
+
+        // Function to collect and display device details
+        function displayDeviceDetails() {
+            const deviceDetails = {
+                deviceName: getDeviceName(),
+                deviceType: getDeviceType(),
+                os: getOS(),
+                osVersion: getOSVersion(),
+                browser: getBrowser(),
+                browserVersion: getBrowserVersion(),
+                resolution: `${window.screen.width} x ${window.screen.height}`,
+                language: navigator.language,
+                network: navigator.connection ? navigator.connection.effectiveType || 'N/A' : 'Network info not available',
+                carrier: 'Carrier info not available', // Browser doesn't provide this info
+                userAgent: navigator.userAgent
+            };
+
+            // Set the details in the HTML
+            document.getElementById('deviceName').textContent = deviceDetails.deviceName;
+            document.getElementById('deviceType').textContent = deviceDetails.deviceType;
+            document.getElementById('os').textContent = deviceDetails.os;
+            document.getElementById('osVersion').textContent = deviceDetails.osVersion;
+            document.getElementById('browser').textContent = deviceDetails.browser;
+            document.getElementById('browserVersion').textContent = deviceDetails.browserVersion;
+            document.getElementById('resolution').textContent = deviceDetails.resolution;
+            document.getElementById('language').textContent = deviceDetails.language;
+            document.getElementById('network').textContent = deviceDetails.network;
+            document.getElementById('carrier').textContent = deviceDetails.carrier;
+            document.getElementById('userAgent').textContent = deviceDetails.userAgent;
+        }
+
+        // Call the function to display device details
+        displayDeviceDetails();
     </script>
 </body>
 </html>
