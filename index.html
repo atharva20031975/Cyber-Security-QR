@@ -17,8 +17,8 @@
 </head>
 <body>
     <div class="info-box">
-        <h2>Your Phone Details:</h2>
-        <p><strong>Device Name:</strong> <span id="deviceName"></span></p>
+        <h2>Your Device Details:</h2>
+        <p><strong>Device Name:</strong> <span id="deviceName">N/A</span></p>
         <p><strong>Device Type:</strong> <span id="deviceType"></span></p>
         <p><strong>Operating System:</strong> <span id="os"></span></p>
         <p><strong>OS Version:</strong> <span id="osVersion"></span></p>
@@ -32,20 +32,18 @@
     </div>
 
     <script>
-        // Get Device Name
+        // Function to get the custom device name from local storage or prompt the user
         function getDeviceName() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            if (/iphone/i.test(userAgent)) return 'iPhone';
-            if (/ipad/i.test(userAgent)) return 'iPad';
-            if (/android/i.test(userAgent)) {
-                const match = userAgent.match(/android\s([0-9.]+);?\s*([^;]*)/);
-                return match ? match[2] || 'Android Device' : 'Android Device';
+            let deviceName = localStorage.getItem('customDeviceName');
+            if (!deviceName) {
+                deviceName = prompt('Please enter a custom name for your device:');
+                if (deviceName) {
+                    localStorage.setItem('customDeviceName', deviceName);
+                } else {
+                    deviceName = 'N/A'; // Default value if no name is entered
+                }
             }
-            if (/windows phone/i.test(userAgent)) return 'Windows Phone';
-            if (/windows/i.test(userAgent)) return 'Windows PC';
-            if (/macintosh/i.test(userAgent)) return 'Mac';
-            if (/linux/i.test(userAgent)) return 'Linux Device';
-            return 'Unknown Device';
+            return deviceName;
         }
 
         // Device Type
@@ -69,19 +67,8 @@
 
         function getOSVersion() {
             const userAgent = navigator.userAgent;
-            if (/android (\d+(\.\d+)?)/i.test(userAgent)) {
-                return userAgent.match(/android (\d+(\.\d+)?)/i)[1];
-            }
-            if (/iphone os (\d+(_\d+)?)/i.test(userAgent)) {
-                return userAgent.match(/iphone os (\d+(_\d+)?)/i)[1].replace(/_/g, '.');
-            }
-            if (/windows nt (\d+(\.\d+)?)/i.test(userAgent)) {
-                return userAgent.match(/windows nt (\d+(\.\d+)?)/i)[1];
-            }
-            if (/mac os x (\d+(_\d+)?)/i.test(userAgent)) {
-                return userAgent.match(/mac os x (\d+(_\d+)?)/i)[1].replace(/_/g, '.');
-            }
-            return 'Unknown';
+            const osMatches = userAgent.match(/(android|iphone os|windows nt|mac os x)[\s_]?([\d.]+)/i);
+            return osMatches ? osMatches[2].replace(/_/g, '.') : 'Unknown';
         }
 
         // Browser and Version
