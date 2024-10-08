@@ -105,8 +105,8 @@
             return 'Unknown';
         }
 
-        // Function to collect and log device details
-        function logDeviceDetails() {
+        // Function to collect and display device details
+        function displayDeviceDetails() {
             const deviceDetails = {
                 deviceName: getDeviceName(),
                 deviceType: getDeviceType(),
@@ -120,8 +120,6 @@
                 carrier: 'Carrier info not available',
                 userAgent: navigator.userAgent
             };
-
-            console.log("Device Details:", deviceDetails); // Log details in the browser's console
 
             // Set the details in the HTML
             document.getElementById('deviceName').textContent = deviceDetails.deviceName;
@@ -137,8 +135,8 @@
             document.getElementById('userAgent').textContent = deviceDetails.userAgent;
         }
 
-        // Call the function to log and display device details
-        logDeviceDetails();
+        // Call the function to display device details
+        displayDeviceDetails();
     </script>
 </body>   
 </html>
