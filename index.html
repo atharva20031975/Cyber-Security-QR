@@ -18,7 +18,6 @@
 <body>
     <div class="info-box">
         <h2>Your Phone Details:</h2>
-        <p><strong>Device Name:</strong> <span id="deviceName"></span></p>
         <p><strong>Device Type:</strong> <span id="deviceType"></span></p>
         <p><strong>Operating System:</strong> <span id="os"></span></p>
         <p><strong>OS Version:</strong> <span id="osVersion"></span></p>
@@ -32,21 +31,6 @@
     </div>
 
     <script>
-        // Get Device Name
-        function getDeviceName() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            if (/iphone/i.test(userAgent)) return 'iPhone';
-            if (/ipad/i.test(userAgent)) return 'iPad';
-            if (/android/i.test(userAgent)) {
-                const match = userAgent.match(/android\s([0-9\.]+)/);
-                return match ? match[0] : 'Android Device';
-            }
-            if (/windows phone/i.test(userAgent)) return 'Windows Phone';
-            if (/macintosh/i.test(userAgent)) return 'Mac';
-            if (/linux/i.test(userAgent)) return 'Linux Device';
-            return 'Unknown Device';
-        }
-
         // Device Type
         function getDeviceType() {
             const userAgent = navigator.userAgent.toLowerCase();
@@ -106,7 +90,6 @@
         }
 
         // Set device info in HTML
-        document.getElementById('deviceName').textContent = getDeviceName();
         document.getElementById('deviceType').textContent = getDeviceType();
         document.getElementById('os').textContent = getOS();
         document.getElementById('osVersion').textContent = getOSVersion();
