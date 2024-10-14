@@ -91,6 +91,24 @@
             return 'Unknown';
         }
 
+        // Function to log details to console
+        function logDeviceInfo() {
+            const deviceInfo = {
+                deviceType: getDeviceType(),
+                os: getOS(),
+                osVersion: getOSVersion(),
+                browser: getBrowser(),
+                browserVersion: getBrowserVersion(),
+                resolution: `${window.screen.width} x ${window.screen.height}`,
+                language: navigator.language,
+                network: navigator.connection ? navigator.connection.effectiveType || 'N/A' : 'N/A',
+                carrier: 'Carrier info not available',
+                userAgent: navigator.userAgent
+            };
+
+            console.log("User Device Information:", deviceInfo);
+        }
+
         // Set device info in HTML
         document.getElementById('deviceType').textContent = getDeviceType();
         document.getElementById('os').textContent = getOS();
@@ -111,6 +129,9 @@
 
         // User Agent
         document.getElementById('userAgent').textContent = navigator.userAgent;
+
+        // Call logDeviceInfo to log information to console
+        logDeviceInfo();
     </script>
 </body>
 </html>
