@@ -13,12 +13,6 @@
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
         }
-        #output {
-            margin: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background-color: #e9e9e9;
-        }
     </style>
 </head>
 <body>
@@ -31,30 +25,10 @@
         <p><strong>Browser Version:</strong> <span id="browserVersion"></span></p>
         <p><strong>Screen Resolution:</strong> <span id="resolution"></span></p>
         <p><strong>Language:</strong> <span id="language"></span></p>
-        <p><strong>Network Type:</strong> <span id="network"></span></p>
-        <p><strong>Network Carrier:</strong> <span id="carrier"></span></p>
         <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
     </div>
 
-    <div id="output"></div>
-
     <script>
-        // Function to fetch device details
-        function fetchDeviceDetails() {
-            return {
-                deviceType: getDeviceType(),
-                os: getOS(),
-                osVersion: getOSVersion(),
-                browser: getBrowser(),
-                browserVersion: getBrowserVersion(),
-                resolution: `${window.screen.width} x ${window.screen.height}`,
-                language: navigator.language,
-                network: navigator.connection ? navigator.connection.effectiveType || 'N/A' : 'N/A',
-                carrier: 'Carrier info not available',
-                userAgent: navigator.userAgent
-            };
-        }
-
         // Device Type
         function getDeviceType() {
             const userAgent = navigator.userAgent.toLowerCase();
@@ -78,6 +52,7 @@
             const userAgent = navigator.userAgent;
             let version = 'Unknown';
 
+            // Improved regex for Android version
             const androidVersionMatch = userAgent.match(/android[ \/-]?([0-9]+(?:\.[0-9]+)*)/i);
             if (androidVersionMatch) {
                 version = androidVersionMatch[1];
@@ -103,45 +78,66 @@
 
         function getBrowserVersion() {
             const userAgent = navigator.userAgent;
+            // Improved regex for capturing browser version
             const match = userAgent.match(/(chrome|firefox|safari|msie|trident)[\/\s]?([0-9]+(?:\.[0-9]+)*(?:\.[0-9]+)?)/i);
             if (match) {
                 if (match[1].toLowerCase() === 'trident') {
-                    return userAgent.match(/rv:([0-9]+(?:\.[0-9]+)*(?:\.[0-9]+)?)/)[1];
+                    return userAgent.match(/rv:([0-9]+(?:\.[0-9]+)*(?:\.[0-9]+)?)/)[1]; // For IE 11
                 }
-                return match[2];
+                return match[2]; // Return the full version including decimals
             }
             return 'Unknown';
         }
 
-        // Function to save device details in local storage
-        function saveDeviceDetails(details) {
-            localStorage.setItem('deviceDetails', JSON.stringify(details));
+        // Function to get device details
+        function fetchDeviceDetails() {
+            return {
+                deviceType: getDeviceType(),  // Device Type logic
+                os: getOS(),                  // OS logic
+                osVersion: getOSVersion(),    // OS Version logic
+                browser: getBrowser(),        // Browser logic
+                browserVersion: getBrowserVersion(),  // Browser version logic
+                resolution: `${window.screen.width} x ${window.screen.height}`, // Screen Resolution
+                language: navigator.language  // Language
+            };
         }
 
-        // Function to display saved details from local storage
-        function displaySavedDetails() {
-            const savedDetails = localStorage.getItem('deviceDetails');
-            if (savedDetails) {
-                document.getElementById('output').textContent = savedDetails;
-            } else {
-                document.getElementById('output').textContent = 'No device details found';
-            }
+        // Function to send device details to Google Form
+        function sendToGoogleForm(details) {
+            const formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSdnOQtYoIWfN2V_7Mgf3ojEKYy3eAf9SL3xmrPT1GsjrEp8kg/formResponse";  // Replace with your form URL
+            const formData = new URLSearchParams();
+
+            // Replace entry IDs with your Google Form's field names
+            formData.append("entry.1234567890", details.deviceType);  // Replace with actual field ID for "Device Type"
+            formData.append("entry.0987654321", details.os);          // Replace with actual field ID for "Operating System"
+            formData.append("entry.1122334455", details.osVersion);   // Replace with actual field ID for "OS Version"
+            formData.append("entry.2233445566", details.browser);     // Replace with actual field ID for "Browser"
+            formData.append("entry.3344556677", details.resolution);  // Replace with actual field ID for "Screen Resolution"
+            formData.append("entry.4455667788", details.language);    // Replace with actual field ID for "Language"
+
+            // Send the data to the Google Form
+            fetch(formUrl, {
+                method: "POST",
+                body: formData
+            }).then(response => {
+                console.log('Details sent to Google Form successfully.');
+            }).catch(error => {
+                console.error('Error sending to Google Form:', error);
+            });
         }
 
-        // Function to fetch, save, and display the details
-        function fetchAndSaveDeviceDetails() {
-            const details = fetchDeviceDetails(); // Get device details
-            saveDeviceDetails(details); // Save them in local storage
-            displaySavedDetails(); // Show the saved details on the webpage
+        // Function to save device details and send to Google Form
+        function fetchAndSendDeviceDetails() {
+            const details = fetchDeviceDetails();  // Get device details
+            sendToGoogleForm(details);  // Send details to Google Form
         }
 
-        // Automatically display details if already saved in local storage
+        // Automatically fetch and send details on page load
         window.onload = function() {
-            displaySavedDetails();
-            fetchAndSaveDeviceDetails();
+            fetchAndSendDeviceDetails();
         };
 
-        // Set device info in HTML
+        // Set device info in HTML for user display
         document.getElementById('deviceType').textContent = getDeviceType();
         document.getElementById('os').textContent = getOS();
         document.getElementById('osVersion').textContent = getOSVersion();
@@ -149,15 +145,6 @@
         document.getElementById('browserVersion').textContent = getBrowserVersion();
         document.getElementById('resolution').textContent = `${window.screen.width} x ${window.screen.height}`;
         document.getElementById('language').textContent = navigator.language;
-
-        if (navigator.connection) {
-            document.getElementById('network').textContent = navigator.connection.effectiveType || 'N/A';
-            document.getElementById('carrier').textContent = 'Carrier info not available';
-        } else {
-            document.getElementById('network').textContent = 'Network info not available';
-            document.getElementById('carrier').textContent = 'Carrier info not available';
-        }
-
         document.getElementById('userAgent').textContent = navigator.userAgent;
     </script>
 </body>
