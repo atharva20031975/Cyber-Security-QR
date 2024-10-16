@@ -104,16 +104,16 @@
 
         // Function to send device details to Google Form
         function sendToGoogleForm(details) {
-            const formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSdnOQtYoIWfN2V_7Mgf3ojEKYy3eAf9SL3xmrPT1GsjrEp8kg/formResponse";  // Replace with your form URL
+            const formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSdrBxf_bl6sjUCrrdGg-h6npxYiIJl8nMd5aUCwgYmleft-WA/formResponse";  // Replace with your form URL
             const formData = new URLSearchParams();
 
             // Replace entry IDs with your Google Form's field names
-            formData.append("entry.1212713703, details.deviceType);  // Replace with actual field ID for "Device Type"
-            formData.append("entry.2111800086", details.os);          // Replace with actual field ID for "Operating System"
-            formData.append("entry.494321261", details.osVersion);   // Replace with actual field ID for "OS Version"
-            formData.append("entry.931771598:", details.browser);     // Replace with actual field ID for "Browser"
-            formData.append("entry.1973407950", details.resolution);  // Replace with actual field ID for "Screen Resolution"
-            formData.append("entry.4455667788", details.language);    // Replace with actual field ID for "Language"
+            formData.append("entry.547030006", details.deviceType);  // Replace with actual field ID for "Device Type"
+            formData.append("entry.1631264441", details.os);          // Replace with actual field ID for "Operating System"
+            formData.append("entry.1011402277", details.osVersion);    // Replace with actual field ID for "OS Version"
+            formData.append("entry.1269727034", details.browser);      // Replace with actual field ID for "Browser"
+            formData.append("entry.1523116562", details.resolution);  // Replace with actual field ID for "Screen Resolution"
+            formData.append("entry.1090368074", details.language);    // Replace with actual field ID for "Language"
 
             // Send the data to the Google Form
             fetch(formUrl, {
