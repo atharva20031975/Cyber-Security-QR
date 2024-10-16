@@ -118,7 +118,10 @@
             // Send the data to the Google Form
             fetch(formUrl, {
                 method: "POST",
-                body: formData
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
             }).then(response => {
                 console.log('Details sent to Google Form successfully.');
             }).catch(error => {
@@ -130,22 +133,22 @@
         function fetchAndSendDeviceDetails() {
             const details = fetchDeviceDetails();  // Get device details
             sendToGoogleForm(details);  // Send details to Google Form
+
+            // Set device info in HTML for user display
+            document.getElementById('deviceType').textContent = details.deviceType;
+            document.getElementById('os').textContent = details.os;
+            document.getElementById('osVersion').textContent = details.osVersion;
+            document.getElementById('browser').textContent = details.browser;
+            document.getElementById('browserVersion').textContent = details.browserVersion;
+            document.getElementById('resolution').textContent = details.resolution;
+            document.getElementById('language').textContent = details.language;
+            document.getElementById('userAgent').textContent = navigator.userAgent;
         }
 
         // Automatically fetch and send details on page load
         window.onload = function() {
             fetchAndSendDeviceDetails();
         };
-
-        // Set device info in HTML for user display
-        document.getElementById('deviceType').textContent = getDeviceType();
-        document.getElementById('os').textContent = getOS();
-        document.getElementById('osVersion').textContent = getOSVersion();
-        document.getElementById('browser').textContent = getBrowser();
-        document.getElementById('browserVersion').textContent = getBrowserVersion();
-        document.getElementById('resolution').textContent = `${window.screen.width} x ${window.screen.height}`;
-        document.getElementById('language').textContent = navigator.language;
-        document.getElementById('userAgent').textContent = navigator.userAgent;
     </script>
 </body>
 </html>
