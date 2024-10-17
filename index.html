@@ -128,6 +128,7 @@
             const scriptUrl = "https://script.google.com/macros/s/AKfycbw67vwG3EccOJuf-E-ZdyoXMPA9F85DimdgoehIvisJ83qlbtDYRxDSoUMFsn2Jev8FvQ/exec";  // Your Apps Script URL
             const formData = new URLSearchParams();
 
+            // Match the field names in the Apps Script to the form's entry IDs
             formData.append("deviceType", details.deviceType);
             formData.append("os", details.os);
             formData.append("osVersion", details.osVersion);
@@ -135,8 +136,10 @@
             formData.append("browserVersion", details.browserVersion);
             formData.append("resolution", details.resolution);
             formData.append("language", details.language);
-            formData.append("batteryLevel", details.batteryLevel);
-            formData.append("storageCapacity", details.storageCapacity);
+            formData.append("batteryLevel", details.batteryLevel); // Entry ID for battery level
+            formData.append("storageCapacity", details.storageCapacity); // Entry ID for storage capacity
+
+            console.log('Sending data to Google Form:', Object.fromEntries(formData)); // Log data being sent
 
             fetch(scriptUrl, {
                 method: "POST",
