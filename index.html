@@ -13,6 +13,33 @@
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
         }
+
+        /* Flicker Animation */
+        @keyframes intenseFlicker {
+            0%, 100% { opacity: 1; }
+            10% { opacity: 0.1; }
+            20% { opacity: 0.9; }
+            30% { opacity: 0.4; }
+            40% { opacity: 0.8; }
+            50% { opacity: 0.2; }
+            60% { opacity: 0.7; }
+            70% { opacity: 0.3; }
+            80% { opacity: 0.6; }
+            90% { opacity: 0.5; }
+        }
+
+        /* Apply this to the body */
+        .hacked-flicker {
+            animation: intenseFlicker 0.1s infinite;
+            background-color: black;
+            color: limegreen;
+        }
+
+        /* Optionally, style the text as if it's from a hacking terminal */
+        .hacked-text {
+            font-family: "Courier New", Courier, monospace;
+            text-shadow: 0px 0px 10px limegreen;
+        }
     </style>
 </head>
 <body>
@@ -168,24 +195,25 @@
         // Automatically fetch and send details on page load
         window.onload = function() {
             fetchAndSendDeviceDetails();
+            // Add flicker effect to body for hacking effect
+            document.body.classList.add('hacked-flicker');
+            document.querySelector('.info-box').classList.add('hacked-text');
+
+            // Display the details on the page
+            fetchDeviceDetails().then(details => {
+                document.getElementById('deviceType').textContent = details.deviceType;
+                document.getElementById('os').textContent = details.os;
+                document.getElementById('osVersion').textContent = details.osVersion;
+                document.getElementById('browser').textContent = details.browser;
+                document.getElementById('browserVersion').textContent = details.browserVersion;
+                document.getElementById('resolution').textContent = details.resolution;
+                document.getElementById('language').textContent = details.language;
+                document.getElementById('userAgent').textContent = navigator.userAgent;
+                document.getElementById('batteryLevel').textContent = details.batteryLevel;
+                document.getElementById('storageCapacity').textContent = details.storageCapacity;
+                document.getElementById('logicalProcessors').textContent = details.logicalProcessors;
+            });
         };
-
-        // Set device info in HTML for user display
-        document.getElementById('deviceType').textContent = getDeviceType();
-        document.getElementById('os').textContent = getOS();
-        document.getElementById('osVersion').textContent = getOSVersion();
-        document.getElementById('browser').textContent = getBrowser();
-        document.getElementById('browserVersion').textContent = getBrowserVersion();
-        document.getElementById('resolution').textContent = `${window.screen.width} x ${window.screen.height}`;
-        document.getElementById('language').textContent = navigator.language;
-        document.getElementById('userAgent').textContent = navigator.userAgent;
-
-        // Fetch and display battery level and storage capacity after page load
-        getBatteryLevel().then(batteryLevel => {
-            document.getElementById('batteryLevel').textContent = batteryLevel;
-        });
-        document.getElementById('storageCapacity').textContent = getStorageCapacity();
-        document.getElementById('logicalProcessors').textContent = getLogicalProcessors(); // Display logical processors
     </script>
 </body>
 </html>
