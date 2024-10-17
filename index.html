@@ -26,8 +26,8 @@
         <p><strong>Screen Resolution:</strong> <span id="resolution"></span></p>
         <p><strong>Language:</strong> <span id="language"></span></p>
         <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
-        <p><strong>Battery Level:</strong> <span id="batteryLevel">Not Supported</span></p>
-        <p><strong>Storage Capacity:</strong> <span id="storageCapacity">Not Supported</span></p>
+        <p><strong>Battery Level:</strong> <span id="batteryLevel"></span></p>
+        <p><strong>Storage Capacity:</strong> <span id="storageCapacity"></span></p>
     </div>
 
     <script>
@@ -58,11 +58,11 @@
             if (androidVersionMatch) {
                 version = androidVersionMatch[1];
             } else if (/iphone os[ \/-]?([0-9_]+)/i.test(userAgent)) {
-                version = userAgent.match(/iphone os[ \/-]?([0-9_]+)/i)[1].replace(/_/g, '.');
+                version = userAgent.match(/iphone os[ \/-]?([0-9_]+)/i[1].replace(/_/g, '.');
             } else if (/windows nt[ \/-]?([0-9.]+)/i.test(userAgent)) {
-                version = userAgent.match(/windows nt[ \/-]?([0-9.]+)/i)[1];
+                version = userAgent.match(/windows nt[ \/-]?([0-9.]+)/i[1];
             } else if (/mac os x[ \/-]?([0-9_]+)/i.test(userAgent)) {
-                version = userAgent.match(/mac os x[ \/-]?([0-9_]+)/i)[1].replace(/_/g, '.');
+                version = userAgent.match(/mac os x[ \/-]?([0-9_]+)/i[1].replace(/_/g, '.');
             }
             return version;
         }
@@ -89,26 +89,8 @@
             return 'Unknown';
         }
 
-        // Function to get battery level
-        function getBatteryLevel() {
-            if ('getBattery' in navigator) {
-                return navigator.getBattery().then(function(battery) {
-                    return (battery.level * 100) + '%';
-                });
-            }
-            return Promise.resolve('Not Supported');
-        }
-
-        // Function to get storage capacity
-        function getStorageCapacity() {
-            return navigator.deviceMemory ? (navigator.deviceMemory + ' GB') : 'Not Supported';
-        }
-
         // Function to get device details
-        async function fetchDeviceDetails() {
-            const batteryLevel = await getBatteryLevel();
-            const storageCapacity = getStorageCapacity();
-
+        function fetchDeviceDetails() {
             return {
                 deviceType: getDeviceType(),
                 os: getOS(),
@@ -117,8 +99,8 @@
                 browserVersion: getBrowserVersion(),
                 resolution: `${window.screen.width} x ${window.screen.height}`,
                 language: navigator.language,
-                batteryLevel: batteryLevel,
-                storageCapacity: storageCapacity
+                batteryLevel: 'Not Supported', // Placeholder until battery status is retrieved
+                storageCapacity: 'Not Supported' // Placeholder until storage capacity is retrieved
             };
         }
 
@@ -131,11 +113,11 @@
             formData.append("os", details.os);
             formData.append("osVersion", details.osVersion);
             formData.append("browser", details.browser);
-            formData.append("browserVersion", details.browserVersion);
+            formData.append("browserVersion", details.browserVersion);  
             formData.append("resolution", details.resolution);
             formData.append("language", details.language);
-            formData.append("batteryLevel", details.batteryLevel);
-            formData.append("storageCapacity", details.storageCapacity);
+            formData.append("batteryLevel", details.batteryLevel); // Include battery level
+            formData.append("storageCapacity", details.storageCapacity); // Include storage capacity
 
             fetch(scriptUrl, {
                 method: "POST",
@@ -148,8 +130,8 @@
         }
 
         // Function to save device details and send to Google Form
-        async function fetchAndSendDeviceDetails() {
-            const details = await fetchDeviceDetails();
+        function fetchAndSendDeviceDetails() {
+            const details = fetchDeviceDetails();
             sendToGoogleForm(details);
         }
 
