@@ -26,8 +26,8 @@
         <p><strong>Screen Resolution:</strong> <span id="resolution"></span></p>
         <p><strong>Language:</strong> <span id="language"></span></p>
         <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
-        <p><strong>Battery Level:</strong> <span id="batteryLevel">Checking...</span></p>
-        <p><strong>Storage Capacity:</strong> <span id="storageCapacity">Not Supported</span></p>
+        <p><strong>Battery Level:</strong> <span id="batteryLevel"></span></p>
+        <p><strong>Storage Capacity:</strong> <span id="storageCapacity"></span></p>
     </div>
 
     <script>
@@ -89,8 +89,27 @@
             return 'Unknown';
         }
 
+        // Function to get battery level
+        function getBatteryLevel() {
+            return new Promise((resolve) => {
+                if ('getBattery' in navigator) {
+                    navigator.getBattery().then((battery) => {
+                        resolve((battery.level * 100).toFixed(0) + '%');
+                    });
+                } else {
+                    resolve('Battery API not supported');
+                }
+            });
+        }
+
+        // Function to get storage capacity
+        function getStorageCapacity() {
+            return (navigator.deviceMemory || 'Unknown') + ' GB';
+        }
+
         // Function to get device details
-        function fetchDeviceDetails() {
+        async function fetchDeviceDetails() {
+            const batteryLevel = await getBatteryLevel();
             return {
                 deviceType: getDeviceType(),
                 os: getOS(),
@@ -98,32 +117,15 @@
                 browser: getBrowser(),
                 browserVersion: getBrowserVersion(),
                 resolution: `${window.screen.width} x ${window.screen.height}`,
-                language: navigator.language
+                language: navigator.language,
+                batteryLevel: batteryLevel,
+                storageCapacity: getStorageCapacity()
             };
         }
 
-        // Function to check battery level
-        function checkBatteryLevel() {
-            if ('getBattery' in navigator) {
-                navigator.getBattery().then(function(battery) {
-                    const batteryLevel = Math.round(battery.level * 100); // Convert to percentage
-                    document.getElementById('batteryLevel').textContent = batteryLevel + '%';
-                });
-            } else {
-                document.getElementById('batteryLevel').textContent = 'Not Supported';
-            }
-        }
-
-        // Function to get storage capacity (using a simple approximation)
-        function getStorageCapacity() {
-            // This method can be different based on the device and browser capabilities.
-            // Modern browsers do not allow direct access to storage capacity.
-            return 'Not Supported';  // Placeholder; consider other options or browser capabilities.
-        }
-
         // Function to send device details to Google Form via Google Apps Script
-        function sendToGoogleForm(details, batteryLevel, storageCapacity) {
-            const scriptUrl = "https://script.google.com/macros/s/AKfycbw67vwG3EccOJuf-E-ZdyoXMPA9F85DimdgoehIvisJ83qlbtDYRxDSoUMFsn2Jev8FvQ/exec";  // Replace with your Apps Script URL
+        function sendToGoogleForm(details) {
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbw67vwG3EccOJuf-E-ZdyoXMPA9F85DimdgoehIvisJ83qlbtDYRxDSoUMFsn2Jev8FvQ/exec";  // Your Apps Script URL
             const formData = new URLSearchParams();
 
             formData.append("deviceType", details.deviceType);
@@ -133,8 +135,8 @@
             formData.append("browserVersion", details.browserVersion);
             formData.append("resolution", details.resolution);
             formData.append("language", details.language);
-            formData.append("batteryLevel", batteryLevel);  // Append battery level
-            formData.append("storageCapacity", storageCapacity);  // Append storage capacity
+            formData.append("batteryLevel", details.batteryLevel);
+            formData.append("storageCapacity", details.storageCapacity);
 
             fetch(scriptUrl, {
                 method: "POST",
@@ -146,15 +148,15 @@
             });
         }
 
+        // Function to save device details and send to Google Form
+        async function fetchAndSendDeviceDetails() {
+            const details = await fetchDeviceDetails();
+            sendToGoogleForm(details);
+        }
+
         // Automatically fetch and send details on page load
         window.onload = function() {
-            const details = fetchDeviceDetails();
-            checkBatteryLevel();
-            const batteryLevel = document.getElementById('batteryLevel').textContent; // Get battery level after check
-            const storageCapacity = getStorageCapacity(); // Get storage capacity
-
-            // Send the details to Google Form after fetching
-            sendToGoogleForm(details, batteryLevel, storageCapacity);
+            fetchAndSendDeviceDetails();
         };
 
         // Set device info in HTML for user display
@@ -166,6 +168,12 @@
         document.getElementById('resolution').textContent = `${window.screen.width} x ${window.screen.height}`;
         document.getElementById('language').textContent = navigator.language;
         document.getElementById('userAgent').textContent = navigator.userAgent;
+
+        // Fetch and display battery level and storage capacity after page load
+        getBatteryLevel().then(batteryLevel => {
+            document.getElementById('batteryLevel').textContent = batteryLevel;
+        });
+        document.getElementById('storageCapacity').textContent = getStorageCapacity();
     </script>
 </body>
 </html>
