@@ -57,7 +57,7 @@
 
             const androidVersionMatch = userAgent.match(/android[ \/-]?([0-9]+(?:\.[0-9]+)*)/i);
             if (androidVersionMatch) {
-                version = androidVersionMatch[1];
+                version = androidVersionMatch[2];
             } else if (/iphone os[ \/-]?([0-9_]+)/i.test(userAgent)) {
                 version = userAgent.match(/iphone os[ \/-]?([0-9_]+)/i)[1].replace(/_/g, '.');
             } else if (/windows nt[ \/-]?([0-9.]+)/i.test(userAgent)) {
