@@ -68,9 +68,18 @@
         // Browser and Version
         function getBrowser() {
             const userAgent = navigator.userAgent;
-            if (userAgent.includes('Edge')) return 'Microsoft Edge';  // Check for Edge first
+
+            if (userAgent.includes('Edge')) {
+                return 'Microsoft Edge';
+            } 
+            if (userAgent.includes('Chrome')) {
+                // Check if it's not Edge to ensure we don't mistakenly identify Edge as Chrome
+                if (userAgent.includes('Edg/')) {
+                    return 'Microsoft Edge'; // New Edge based on Chromium
+                }
+                return 'Google Chrome';
+            }
             if (userAgent.includes('Firefox')) return 'Mozilla Firefox';
-            if (userAgent.includes('Chrome')) return 'Google Chrome';
             if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
             if (userAgent.includes('MSIE') || userAgent.includes('Trident')) return 'Internet Explorer';
             return 'Unknown';
@@ -110,7 +119,7 @@
             formData.append("os", details.os);
             formData.append("osVersion", details.osVersion);
             formData.append("browser", details.browser);
-            formData.append("browserVersion", details.browserVersion);  // Ensure this is correctly appended
+            formData.append("browserVersion", details.browserVersion);
             formData.append("resolution", details.resolution);
             formData.append("language", details.language);
 
@@ -140,7 +149,7 @@
         document.getElementById('os').textContent = getOS();
         document.getElementById('osVersion').textContent = getOSVersion();
         document.getElementById('browser').textContent = getBrowser();
-        document.getElementById('browserVersion').textContent = getBrowserVersion(); // Ensure this value is set correctly
+        document.getElementById('browserVersion').textContent = getBrowserVersion();
         document.getElementById('resolution').textContent = `${window.screen.width} x ${window.screen.height}`;
         document.getElementById('language').textContent = navigator.language;
         document.getElementById('userAgent').textContent = navigator.userAgent;
