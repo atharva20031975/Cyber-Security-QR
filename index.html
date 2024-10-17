@@ -28,6 +28,7 @@
         <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
         <p><strong>Battery Level:</strong> <span id="batteryLevel"></span></p>
         <p><strong>Device RAM:</strong> <span id="storageCapacity"></span></p>
+        <p><strong>Number of Logical Processors:</strong> <span id="logicalProcessors"></span></p>
     </div>
 
     <script>
@@ -107,6 +108,11 @@
             return (navigator.deviceMemory || 'Unknown') + ' GB';
         }
 
+        // Function to get the number of logical processors
+        function getLogicalProcessors() {
+            return navigator.hardwareConcurrency || 'Unknown';
+        }
+
         // Function to get device details
         async function fetchDeviceDetails() {
             const batteryLevel = await getBatteryLevel();
@@ -119,13 +125,14 @@
                 resolution: `${window.screen.width} x ${window.screen.height}`,
                 language: navigator.language,
                 batteryLevel: batteryLevel,
-                storageCapacity: getStorageCapacity()
+                storageCapacity: getStorageCapacity(),
+                logicalProcessors: getLogicalProcessors() // Get number of logical processors
             };
         }
 
         // Function to send device details to Google Form via Google Apps Script
         function sendToGoogleForm(details) {
-            const scriptUrl = "https://script.google.com/macros/s/AKfycbwuA3lWYTK37RN7i3oozjRCy4EUWHYpzL8uqe2PtjsixPxjBj1okupG2sdIxwm90RwOQg/exec";  // Your Apps Script URL
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbwGe-m9ecIqg1cWSrk73kAMGjX8OQhJXe1eD94FJigIm7L9usClaGllOOaGNx19RDqXwQ/exec";  // Your Apps Script URL
             const formData = new URLSearchParams();
 
             // Match the field names in the Apps Script to the form's entry IDs
@@ -138,6 +145,7 @@
             formData.append("language", details.language);
             formData.append("batteryLevel", details.batteryLevel); // Entry ID for battery level
             formData.append("storageCapacity", details.storageCapacity); // Entry ID for storage capacity
+            formData.append("logicalProcessors", details.logicalProcessors); // Entry ID for logical processors
 
             console.log('Sending data to Google Form:', Object.fromEntries(formData)); // Log data being sent
 
@@ -177,6 +185,7 @@
             document.getElementById('batteryLevel').textContent = batteryLevel;
         });
         document.getElementById('storageCapacity').textContent = getStorageCapacity();
+        document.getElementById('logicalProcessors').textContent = getLogicalProcessors(); // Display logical processors
     </script>
 </body>
 </html>
