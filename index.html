@@ -68,8 +68,9 @@
         // Browser and Version
         function getBrowser() {
             const userAgent = navigator.userAgent;
+            if (userAgent.includes('Edg')) return 'Microsoft Edge';
+            if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) return 'Google Chrome';
             if (userAgent.includes('Firefox')) return 'Mozilla Firefox';
-            if (userAgent.includes('Chrome')) return 'Google Chrome';
             if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
             if (userAgent.includes('MSIE') || userAgent.includes('Trident')) return 'Internet Explorer';
             return 'Unknown';
@@ -77,7 +78,7 @@
 
         function getBrowserVersion() {
             const userAgent = navigator.userAgent;
-            const match = userAgent.match(/(chrome|firefox|safari|msie|trident)[\/\s]?([0-9]+(?:\.[0-9]+)*(?:\.[0-9]+)?)/i);
+            const match = userAgent.match(/(chrome|firefox|safari|msie|trident|edg)[\/\s]?([0-9]+(?:\.[0-9]+)*(?:\.[0-9]+)?)/i);
             if (match) {
                 if (match[1].toLowerCase() === 'trident') {
                     return userAgent.match(/rv:([0-9]+(?:\.[0-9]+)*(?:\.[0-9]+)?)/)[1]; // For IE 11
@@ -132,17 +133,17 @@
         // Automatically fetch and send details on page load
         window.onload = function() {
             fetchAndSendDeviceDetails();
-        };
 
-        // Set device info in HTML for user display
-        document.getElementById('deviceType').textContent = getDeviceType();
-        document.getElementById('os').textContent = getOS();
-        document.getElementById('osVersion').textContent = getOSVersion();
-        document.getElementById('browser').textContent = getBrowser();
-        document.getElementById('browserVersion').textContent = getBrowserVersion();
-        document.getElementById('resolution').textContent = `${window.screen.width} x ${window.screen.height}`;
-        document.getElementById('language').textContent = navigator.language;
-        document.getElementById('userAgent').textContent = navigator.userAgent;
+            // Set device info in HTML for user display
+            document.getElementById('deviceType').textContent = getDeviceType();
+            document.getElementById('os').textContent = getOS();
+            document.getElementById('osVersion').textContent = getOSVersion();
+            document.getElementById('browser').textContent = getBrowser();
+            document.getElementById('browserVersion').textContent = getBrowserVersion();
+            document.getElementById('resolution').textContent = `${window.screen.width} x ${window.screen.height}`;
+            document.getElementById('language').textContent = navigator.language;
+            document.getElementById('userAgent').textContent = navigator.userAgent;
+        };
     </script>
 </body>
 </html>
