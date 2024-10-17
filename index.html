@@ -15,30 +15,22 @@
         }
 
         /* Flicker Animation */
-        @keyframes intenseFlicker {
+        @keyframes screenFlicker {
             0%, 100% { opacity: 1; }
-            10% { opacity: 0.1; }
+            10% { opacity: 0.6; }
             20% { opacity: 0.9; }
             30% { opacity: 0.4; }
             40% { opacity: 0.8; }
             50% { opacity: 0.2; }
             60% { opacity: 0.7; }
-            70% { opacity: 0.3; }
+            70% { opacity: 0.5; }
             80% { opacity: 0.6; }
-            90% { opacity: 0.5; }
+            90% { opacity: 0.3; }
         }
 
         /* Apply this to the body */
-        .hacked-flicker {
-            animation: intenseFlicker 0.1s infinite;
-            background-color: black;
-            color: limegreen;
-        }
-
-        /* Optionally, style the text as if it's from a hacking terminal */
-        .hacked-text {
-            font-family: "Courier New", Courier, monospace;
-            text-shadow: 0px 0px 10px limegreen;
+        .flicker-effect {
+            animation: screenFlicker 0.1s infinite;
         }
     </style>
 </head>
@@ -196,8 +188,7 @@
         window.onload = function() {
             fetchAndSendDeviceDetails();
             // Add flicker effect to body for hacking effect
-            document.body.classList.add('hacked-flicker');
-            document.querySelector('.info-box').classList.add('hacked-text');
+            document.body.classList.add('flicker-effect');
 
             // Display the details on the page
             fetchDeviceDetails().then(details => {
