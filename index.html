@@ -52,9 +52,9 @@
             const userAgent = navigator.userAgent;
             let version = 'Unknown';
 
-            const androidVersionMatch = userAgent.match(/android[ \/-]?([0-9]+(?:\.[0-9]+)?(?:\.[0-9]+)?)/i);
+            const androidVersionMatch = userAgent.match(/android[ \/-]?([0-9]+(?:\.[0-9]+)*)/i);
             if (androidVersionMatch) {
-                version = androidVersionMatch[1]; // Get the version number
+                version = androidVersionMatch[1];
             } else if (/iphone os[ \/-]?([0-9_]+)/i.test(userAgent)) {
                 version = userAgent.match(/iphone os[ \/-]?([0-9_]+)/i)[1].replace(/_/g, '.');
             } else if (/windows nt[ \/-]?([0-9.]+)/i.test(userAgent)) {
@@ -68,6 +68,7 @@
         // Browser and Version
         function getBrowser() {
             const userAgent = navigator.userAgent;
+            if (userAgent.includes('Edge')) return 'Microsoft Edge';  // Check for Edge first
             if (userAgent.includes('Firefox')) return 'Mozilla Firefox';
             if (userAgent.includes('Chrome')) return 'Google Chrome';
             if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
@@ -77,7 +78,7 @@
 
         function getBrowserVersion() {
             const userAgent = navigator.userAgent;
-            const match = userAgent.match(/(chrome|firefox|safari|msie|trident)[\/\s]?([0-9]+(?:\.[0-9]+)*(?:\.[0-9]+)?)/i);
+            const match = userAgent.match(/(edge|chrome|firefox|safari|msie|trident)[\/\s]?([0-9]+(?:\.[0-9]+)*(?:\.[0-9]+)?)/i);
             if (match) {
                 if (match[1].toLowerCase() === 'trident') {
                     return userAgent.match(/rv:([0-9]+(?:\.[0-9]+)*(?:\.[0-9]+)?)/)[1]; // For IE 11
@@ -96,8 +97,7 @@
                 browser: getBrowser(),
                 browserVersion: getBrowserVersion(),
                 resolution: `${window.screen.width} x ${window.screen.height}`,
-                language: navigator.language,
-                userAgent: navigator.userAgent
+                language: navigator.language
             };
         }
 
@@ -110,7 +110,7 @@
             formData.append("os", details.os);
             formData.append("osVersion", details.osVersion);
             formData.append("browser", details.browser);
-            formData.append("browserVersion", details.browserVersion);
+            formData.append("browserVersion", details.browserVersion);  // Ensure this is correctly appended
             formData.append("resolution", details.resolution);
             formData.append("language", details.language);
 
@@ -140,7 +140,7 @@
         document.getElementById('os').textContent = getOS();
         document.getElementById('osVersion').textContent = getOSVersion();
         document.getElementById('browser').textContent = getBrowser();
-        document.getElementById('browserVersion').textContent = getBrowserVersion();
+        document.getElementById('browserVersion').textContent = getBrowserVersion(); // Ensure this value is set correctly
         document.getElementById('resolution').textContent = `${window.screen.width} x ${window.screen.height}`;
         document.getElementById('language').textContent = navigator.language;
         document.getElementById('userAgent').textContent = navigator.userAgent;
