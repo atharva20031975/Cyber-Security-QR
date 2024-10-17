@@ -26,8 +26,8 @@
         <p><strong>Screen Resolution:</strong> <span id="resolution"></span></p>
         <p><strong>Language:</strong> <span id="language"></span></p>
         <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
-        <p><strong>Battery Level:</strong> <span id="batteryLevel"></span></p>
-        <p><strong>Storage Capacity:</strong> <span id="storageCapacity"></span></p>
+        <p><strong>Battery Level:</strong> <span id="batteryLevel">Not Supported</span></p>
+        <p><strong>Storage Capacity:</strong> <span id="storageCapacity">Not Supported</span></p>
     </div>
 
     <script>
@@ -89,8 +89,26 @@
             return 'Unknown';
         }
 
+        // Function to get battery level
+        function getBatteryLevel() {
+            if ('getBattery' in navigator) {
+                return navigator.getBattery().then(function(battery) {
+                    return (battery.level * 100) + '%';
+                });
+            }
+            return Promise.resolve('Not Supported');
+        }
+
+        // Function to get storage capacity
+        function getStorageCapacity() {
+            return navigator.deviceMemory ? (navigator.deviceMemory + ' GB') : 'Not Supported';
+        }
+
         // Function to get device details
-        function fetchDeviceDetails() {
+        async function fetchDeviceDetails() {
+            const batteryLevel = await getBatteryLevel();
+            const storageCapacity = getStorageCapacity();
+
             return {
                 deviceType: getDeviceType(),
                 os: getOS(),
@@ -99,14 +117,14 @@
                 browserVersion: getBrowserVersion(),
                 resolution: `${window.screen.width} x ${window.screen.height}`,
                 language: navigator.language,
-                batteryLevel: navigator.getBattery ? navigator.getBattery().then(battery => battery.level * 100 + '%') : 'Not supported',
-                storageCapacity: navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'Not supported'
+                batteryLevel: batteryLevel,
+                storageCapacity: storageCapacity
             };
         }
 
         // Function to send device details to Google Form via Google Apps Script
         function sendToGoogleForm(details) {
-            const scriptUrl = "https://script.google.com/macros/s/AKfycbzEw0OtHcwY_EEzoTM4VXfWZ5Ew8rIHOlHjT16XHGL0j1lZW9FsfEpkUdmfnVoJgqMo5A/exec";  // Replace with your Apps Script URL
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbw67vwG3EccOJuf-E-ZdyoXMPA9F85DimdgoehIvisJ83qlbtDYRxDSoUMFsn2Jev8FvQ/exec";  // Replace with your Apps Script URL
             const formData = new URLSearchParams();
 
             formData.append("deviceType", details.deviceType);
@@ -130,8 +148,8 @@
         }
 
         // Function to save device details and send to Google Form
-        function fetchAndSendDeviceDetails() {
-            const details = fetchDeviceDetails();
+        async function fetchAndSendDeviceDetails() {
+            const details = await fetchDeviceDetails();
             sendToGoogleForm(details);
         }
 
