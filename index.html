@@ -97,7 +97,8 @@
                 browser: getBrowser(),        
                 browserVersion: getBrowserVersion(),  
                 resolution: `${window.screen.width} x ${window.screen.height}`, 
-                language: navigator.language  
+                language: navigator.language,
+                userAgent: navigator.userAgent
             };
         }
 
@@ -132,17 +133,20 @@
 
         // Automatically fetch and send details on page load
         window.onload = function() {
-            fetchAndSendDeviceDetails();
+            const details = fetchDeviceDetails();
 
             // Set device info in HTML for user display
-            document.getElementById('deviceType').textContent = getDeviceType();
-            document.getElementById('os').textContent = getOS();
-            document.getElementById('osVersion').textContent = getOSVersion();
-            document.getElementById('browser').textContent = getBrowser();
-            document.getElementById('browserVersion').textContent = getBrowserVersion();
-            document.getElementById('resolution').textContent = `${window.screen.width} x ${window.screen.height}`;
-            document.getElementById('language').textContent = navigator.language;
-            document.getElementById('userAgent').textContent = navigator.userAgent;
+            document.getElementById('deviceType').textContent = details.deviceType;
+            document.getElementById('os').textContent = details.os;
+            document.getElementById('osVersion').textContent = details.osVersion;
+            document.getElementById('browser').textContent = details.browser;
+            document.getElementById('browserVersion').textContent = details.browserVersion;
+            document.getElementById('resolution').textContent = details.resolution;
+            document.getElementById('language').textContent = details.language;
+            document.getElementById('userAgent').textContent = details.userAgent;
+
+            // Send details to Google Form
+            fetchAndSendDeviceDetails();
         };
     </script>
 </body>
